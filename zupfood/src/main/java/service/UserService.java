@@ -3,6 +3,7 @@ package service;
 import connection.Conexao;
 import models.Bebida;
 import models.Lanche;
+import models.Pedido;
 
 import java.sql.*;
 
@@ -52,10 +53,10 @@ public class UserService {
         try {
             ResultSet resultSet = statement.executeQuery(sql);
             while(resultSet.next()){
-                System.out.println(resultSet.getInt("id")+" - "
-                        + resultSet.getString("nome") +" - "
+                System.out.println(resultSet.getInt("id")+") "
+                        + resultSet.getString("nome") +" | qtd - "
                         + resultSet.getInt("quantidade")
-                        + " - R$"+resultSet.getDouble("valor_total"));
+                        + " | R$"+resultSet.getDouble("valor_total"));
             }
         }catch (SQLException e){
             e.printStackTrace();
@@ -146,7 +147,54 @@ public class UserService {
         return valorTotal;
     }
 
-    public void alterarPedido(int id, int quantidade){
-        String sql =
+    public void alterarPedido(int id, int novaQtd){
+        Pedido pedido = buscarPedidoPorId(id);
+        double valorTotalAtualizado = pedido.getValorUnitario()*novaQtd;
+        String sql = "UPDATE pedidos SET quantidade = "+novaQtd+", valor_total= "
+                +valorTotalAtualizado+" WHERE id = "+id;
+        try{
+            statement.executeUpdate(sql);
+            System.out.println("Pedido alterado com sucesso!");
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private Pedido buscarPedidoPorId(int id){
+        Pedido pedido=null;
+        String sql = "SELECT * FROM pedidos WHERE id ="+id;
+        try{
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                pedido = new Pedido();
+                pedido.setId(id);
+                pedido.setNome(resultSet.getString("nome"));
+                pedido.setQuantidade(resultSet.getInt("quantidade"));
+                pedido.setValorUnitario(resultSet.getDouble("valor_unitario"));
+                pedido.setValorTotal(resultSet.getDouble("valor_total"));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return pedido;
+    }
+
+    public void deletarPedido(int id){
+        String sql = "DELETE FROM pedidos WHERE id= "+id;
+        try{
+            statement.executeUpdate(sql);
+            System.out.println("Pedido removido!");
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void esvaziarTabelaPedidos(){
+        String sql = "DELETE FROM pedidos";
+        try{
+            statement.executeUpdate(sql);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 }

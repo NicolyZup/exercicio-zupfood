@@ -5,17 +5,7 @@ public class Bebida {
     private String nome;
     private double preco;
 
-    public Bebida(int id, String nome, double preco) {
-        this.id = id;
-        this.nome = nome;
-        this.preco = preco;
-    }
-
     public Bebida() {}
-
-    public int getId() {
-        return id;
-    }
 
     public void setId(int id) {
         this.id = id;

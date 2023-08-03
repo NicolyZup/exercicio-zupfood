@@ -5,16 +5,7 @@ public class Lanche {
     private String nome;
     private double preco;
 
-    public Lanche(int id, String nome, double preco) {
-        this.id = id;
-        this.nome = nome;
-        this.preco = preco;
-    }
-
     public Lanche() {}
-    public int getId() {
-        return id;
-    }
 
     public void setId(int id) {
         this.id = id;
